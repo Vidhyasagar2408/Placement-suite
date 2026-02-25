@@ -10,12 +10,18 @@ function Layout({ children }) {
   return (
     <div className="shell">
       <header className="topbar">
-        <div className="brand">Placement Suite</div>
-        <nav>
+        <div className="brand-wrap">
+          <div className="brand-mark">PS</div>
+          <div>
+            <div className="brand">Placement Suite</div>
+            <p className="brand-sub">Campus placement operating dashboard</p>
+          </div>
+        </div>
+        <nav className="main-nav">
           <NavLink to="/dashboard">Dashboard</NavLink>
-          <NavLink to="/jobs">Job Tracker</NavLink>
-          <NavLink to="/readiness">JD Readiness</NavLink>
-          <NavLink to="/resume">Resume Builder</NavLink>
+          <NavLink to="/jobs">Jobs</NavLink>
+          <NavLink to="/readiness">Readiness</NavLink>
+          <NavLink to="/resume">Resume</NavLink>
           <NavLink to="/pipeline">Pipeline</NavLink>
           <NavLink to="/proof">Proof</NavLink>
         </nav>

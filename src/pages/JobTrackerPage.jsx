@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSuite } from "../state/SuiteContext";
 
 const defaults = { title: "", company: "", location: "", jdText: "", matchScore: 70 };
@@ -6,12 +7,24 @@ const defaults = { title: "", company: "", location: "", jdText: "", matchScore:
 export default function JobTrackerPage() {
   const { jobs, actions } = useSuite();
   const [form, setForm] = useState(defaults);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const onSubmit = (event) => {
     event.preventDefault();
     if (!form.title || !form.company || !form.jdText) return;
     actions.saveNewJob(form);
     setForm(defaults);
+  };
+
+  const onAnalyze = (jobId) => {
+    const result = actions.analyzeJob(jobId);
+    if (!result) {
+      setMessage("Could not analyze this JD. Ensure JD text is present.");
+      return;
+    }
+    setMessage("JD analyzed successfully. Opening Readiness section.");
+    navigate("/readiness");
   };
 
   return (
@@ -30,6 +43,7 @@ export default function JobTrackerPage() {
 
       <article className="card">
         <h3>Saved Jobs</h3>
+        {message ? <p className="muted">{message}</p> : null}
         <table>
           <thead>
             <tr><th>Role</th><th>Company</th><th>Match</th><th>Stage</th><th>Action</th></tr>
@@ -41,7 +55,7 @@ export default function JobTrackerPage() {
                 <td>{j.company}</td>
                 <td>{j.matchScore}%</td>
                 <td>{j.stage}</td>
-                <td><button onClick={() => actions.analyzeJob(j.id)}>Analyze JD</button></td>
+                <td><button onClick={() => onAnalyze(j.id)}>Analyze JD</button></td>
               </tr>
             ))}
           </tbody>

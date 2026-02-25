@@ -18,12 +18,28 @@ function extractFlatSkills(text = "") {
   return found;
 }
 
+function buildRecommendations({ missing, alignmentScore }) {
+  const suggestions = [];
+  if (alignmentScore < 40) {
+    suggestions.push("Rewrite resume summary with role-specific keywords from JD.");
+  }
+  if (missing.length) {
+    suggestions.push(`Add project bullets that prove: ${missing.slice(0, 3).join(", ")}.`);
+    suggestions.push("Include matching skills in resume Skills section with real evidence.");
+  }
+  if (!missing.length && alignmentScore >= 70) {
+    suggestions.push("Good alignment. Move this job to Applied stage and prepare interview notes.");
+  }
+  return suggestions.slice(0, 4);
+}
+
 export function analyzeJD(jdText, resumeSkills) {
   const jdSkills = extractFlatSkills(jdText || "");
   const normalizedResume = (resumeSkills || []).map((s) => s.toLowerCase());
   const matched = jdSkills.filter((skill) => normalizedResume.includes(skill.toLowerCase()));
   const missing = jdSkills.filter((skill) => !normalizedResume.includes(skill.toLowerCase()));
   const alignmentScore = jdSkills.length ? Math.round((matched.length / jdSkills.length) * 100) : 0;
+  const recommendations = buildRecommendations({ missing, alignmentScore });
 
-  return { jdSkills, matched, missing, alignmentScore };
+  return { jdSkills, matched, missing, alignmentScore, recommendations };
 }

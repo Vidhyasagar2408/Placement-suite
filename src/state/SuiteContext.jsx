@@ -15,7 +15,10 @@ const seedJobs = [
 const initialResume = {
   name: "Your Name",
   email: "",
+  phone: "",
+  location: "",
   summary: "",
+  education: "",
   experience: "",
   projects: "",
   skillsText: "React, JavaScript, HTML, CSS",
@@ -61,6 +64,7 @@ export function SuiteProvider({ children }) {
   const [currentAnalysis, setCurrentAnalysis] = useState(loaded?.currentAnalysis || null);
   const [practiceCompletion, setPracticeCompletion] = useState(loaded?.practiceCompletion || 40);
   const [lastActivityAt, setLastActivityAt] = useState(loaded?.lastActivityAt || new Date().toISOString());
+  const [lastAnalyzedAt, setLastAnalyzedAt] = useState(loaded?.lastAnalyzedAt || null);
 
   const ats = useMemo(() => calculateATS(resume), [resume]);
   const jobMatchQuality = useMemo(() => {
@@ -95,9 +99,9 @@ export function SuiteProvider({ children }) {
   useEffect(() => {
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ jobs, resume, currentAnalysis, practiceCompletion, lastActivityAt })
+      JSON.stringify({ jobs, resume, currentAnalysis, practiceCompletion, lastActivityAt, lastAnalyzedAt })
     );
-  }, [jobs, resume, currentAnalysis, practiceCompletion, lastActivityAt]);
+  }, [jobs, resume, currentAnalysis, practiceCompletion, lastActivityAt, lastAnalyzedAt]);
 
   const markActivity = () => setLastActivityAt(new Date().toISOString());
 
@@ -118,10 +122,20 @@ export function SuiteProvider({ children }) {
 
   const analyzeJob = (jobId) => {
     const job = jobs.find((j) => j.id === jobId);
-    if (!job) return;
+    if (!job) return null;
+    if (!String(job.jdText || "").trim()) return null;
     const analysis = analyzeJD(job.jdText, normalizeSkills(resume.skillsText));
-    setCurrentAnalysis({ jobId, ...analysis });
+    setCurrentAnalysis({
+      jobId,
+      jobTitle: job.title,
+      company: job.company,
+      location: job.location,
+      analyzedAt: new Date().toISOString(),
+      ...analysis,
+    });
+    setLastAnalyzedAt(new Date().toISOString());
     markActivity();
+    return analysis;
   };
 
   const updateJobStage = (jobId, stage) => {
@@ -149,6 +163,7 @@ export function SuiteProvider({ children }) {
     practiceCompletion,
     setPracticeCompletion,
     notifications,
+    lastAnalyzedAt,
     actions: { saveNewJob, analyzeJob, updateJobStage, updateResume, markActivity },
   };
 
