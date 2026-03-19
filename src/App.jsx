@@ -4,7 +4,6 @@ import JobTrackerPage from "./pages/JobTrackerPage";
 import ReadinessPage from "./pages/ReadinessPage";
 import ResumeBuilderPage from "./pages/ResumeBuilderPage";
 import PipelinePage from "./pages/PipelinePage";
-import ProofPage from "./pages/ProofPage";
 
 function Layout({ children }) {
   return (
@@ -23,7 +22,6 @@ function Layout({ children }) {
           <NavLink to="/readiness">Readiness</NavLink>
           <NavLink to="/resume">Resume</NavLink>
           <NavLink to="/pipeline">Pipeline</NavLink>
-          <NavLink to="/proof">Proof</NavLink>
         </nav>
       </header>
       <main className="content">{children}</main>
@@ -41,7 +39,6 @@ export default function App() {
         <Route path="/readiness" element={<ReadinessPage />} />
         <Route path="/resume" element={<ResumeBuilderPage />} />
         <Route path="/pipeline" element={<PipelinePage />} />
-        <Route path="/proof" element={<ProofPage />} />
       </Routes>
     </Layout>
   );

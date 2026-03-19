@@ -105,7 +105,7 @@ export function SuiteProvider({ children }) {
 
   const markActivity = () => setLastActivityAt(new Date().toISOString());
 
-  const saveNewJob = ({ title, company, location, jdText, matchScore }) => {
+  const saveNewJob = ({ title, company, location, jdText, matchScore, source, applyUrl }) => {
     const next = {
       id: `j-${Date.now()}`,
       title,
@@ -113,6 +113,8 @@ export function SuiteProvider({ children }) {
       location,
       jdText,
       matchScore: Number(matchScore) || 65,
+      source: source || null,
+      applyUrl: applyUrl || null,
       stage: "saved",
       savedAt: new Date().toISOString(),
     };
@@ -152,6 +154,14 @@ export function SuiteProvider({ children }) {
     markActivity();
   };
 
+  const removeJob = (jobId) => {
+    setJobs((prev) => prev.filter((job) => job.id !== jobId));
+    if (currentAnalysis?.jobId === jobId) {
+      setCurrentAnalysis(null);
+    }
+    markActivity();
+  };
+
   const value = {
     jobs,
     resume,
@@ -164,7 +174,7 @@ export function SuiteProvider({ children }) {
     setPracticeCompletion,
     notifications,
     lastAnalyzedAt,
-    actions: { saveNewJob, analyzeJob, updateJobStage, updateResume, markActivity },
+    actions: { saveNewJob, analyzeJob, updateJobStage, updateResume, removeJob, markActivity },
   };
 
   return <SuiteContext.Provider value={value}>{children}</SuiteContext.Provider>;

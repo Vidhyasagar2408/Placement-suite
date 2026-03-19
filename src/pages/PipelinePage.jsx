@@ -8,10 +8,21 @@ export default function PipelinePage() {
     <section className="stack">
       <article className="card">
         <h3>Application Pipeline</h3>
-        <p>Pipeline Progress Score: {applicationProgress}</p>
+        <p className="muted">Pipeline Progress Score</p>
+        <div className="pipeline-progress-row">
+          <div className="pipeline-progress-shell">
+            <div className="pipeline-progress-track" aria-hidden="true">
+              <div
+                className="pipeline-progress-fill"
+                style={{ width: `${Math.max(0, Math.min(applicationProgress, 100))}%` }}
+              />
+            </div>
+          </div>
+          <strong className="pipeline-progress-value">{applicationProgress}%</strong>
+        </div>
         <table>
           <thead>
-            <tr><th>Role</th><th>Company</th><th>Stage</th></tr>
+            <tr><th>Role</th><th>Company</th><th>Stage</th><th>Apply</th><th>Remove</th></tr>
           </thead>
           <tbody>
             {jobs.map((job) => (
@@ -25,6 +36,20 @@ export default function PipelinePage() {
                     ))}
                   </select>
                 </td>
+                <td>
+                  {job.applyUrl ? (
+                    <a className="table-apply-link" href={job.applyUrl} target="_blank" rel="noreferrer">
+                      Apply
+                    </a>
+                  ) : (
+                    <span className="muted">No link</span>
+                  )}
+                </td>
+                <td>
+                  <button type="button" className="table-remove-btn" onClick={() => actions.removeJob(job.id)}>
+                    Remove
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -33,14 +58,20 @@ export default function PipelinePage() {
 
       <article className="card">
         <h3>Practice Completion (10% weight)</h3>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={practiceCompletion}
-          onChange={(e) => setPracticeCompletion(Number(e.target.value))}
-        />
-        <p>{practiceCompletion}%</p>
+        <p className="muted">Update your practice progress</p>
+        <div className="practice-progress-row">
+          <div className="practice-range-shell">
+            <input
+              className="practice-range"
+              type="range"
+              min="0"
+              max="100"
+              value={practiceCompletion}
+              onChange={(e) => setPracticeCompletion(Number(e.target.value))}
+            />
+          </div>
+          <span className="practice-simple-value">{practiceCompletion}%</span>
+        </div>
       </article>
     </section>
   );
