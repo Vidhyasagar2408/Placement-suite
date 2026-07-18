@@ -10,10 +10,20 @@ function formatStage(stage) {
 }
 
 export default function DashboardPage() {
-  const { jobs, ats, currentAnalysis, placementScore, notifications, applicationProgress, jobMatchQuality } =
-    useSuite();
+  const {
+    jobs,
+    ats,
+    currentAnalysis,
+    placementScore,
+    notifications,
+    applicationProgress,
+    jobMatchQuality,
+  } = useSuite();
 
-  const top5 = useMemo(() => [...jobs].sort((a, b) => b.matchScore - a.matchScore).slice(0, 5), [jobs]);
+  const top5 = useMemo(
+    () => [...jobs].sort((a, b) => b.matchScore - a.matchScore).slice(0, 5),
+    [jobs],
+  );
   const stageCount = useMemo(() => {
     return jobs.reduce((acc, job) => {
       acc[job.stage] = (acc[job.stage] || 0) + 1;
@@ -26,8 +36,8 @@ export default function DashboardPage() {
     ats.score < 70
       ? "Improve ATS fundamentals by filling summary, projects, and skills."
       : (currentAnalysis?.alignmentScore ?? 0) < 60
-      ? "Align resume keywords with latest JD before applying."
-      : "Move highest-match saved jobs to Applied and prepare interview notes.";
+        ? "Align resume keywords with latest JD before applying."
+        : "Move highest-match saved jobs to Applied and prepare interview notes.";
 
   return (
     <section className="dashboard">
@@ -36,18 +46,12 @@ export default function DashboardPage() {
           <p className="eyebrow">Unified Dashboard</p>
           <h1>Placement Command Center</h1>
           <p className="hero-text">
-            One score, one pipeline, one workflow. Track your placement momentum across job matches, resume quality,
-            and interview readiness.
+            One score, one pipeline, one workflow. Track your placement momentum
+            across job matches, resume quality, and interview readiness.
           </p>
           <div className="hero-actions">
             <Link to="/jobs" className="link-btn">
               Save Job
-            </Link>
-            <Link to="/readiness" className="link-btn ghost">
-              Analyze JD
-            </Link>
-            <Link to="/resume" className="link-btn ghost">
-              Improve Resume
             </Link>
           </div>
         </div>
@@ -111,7 +115,9 @@ export default function DashboardPage() {
                 <div className="mini-track">
                   <div
                     className="mini-fill"
-                    style={{ width: `${Math.min((count / Math.max(jobs.length, 1)) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min((count / Math.max(jobs.length, 1)) * 100, 100)}%`,
+                    }}
                   />
                 </div>
               </li>
@@ -138,7 +144,11 @@ export default function DashboardPage() {
           <h3>Next Action Recommendation</h3>
           <p>{nextAction}</p>
           <ul className="clean-list compact">
-            {notifications.length ? notifications.map((alert) => <li key={alert}>{alert}</li>) : <li>No active alerts.</li>}
+            {notifications.length ? (
+              notifications.map((alert) => <li key={alert}>{alert}</li>)
+            ) : (
+              <li>No active alerts.</li>
+            )}
           </ul>
         </article>
       </section>
